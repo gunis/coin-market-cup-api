@@ -3,7 +3,7 @@
 # coin-market-cup-api
 CoinMarketCup API example request
 
-##Example result:
+## Example result
 ```text
 Info from: 16.03.2020 21:16:12
 ----------------------------------
