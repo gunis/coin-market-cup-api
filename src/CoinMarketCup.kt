@@ -11,17 +11,15 @@ import java.time.format.DateTimeFormatter
 import kotlin.IllegalArgumentException
 
 fun main(args: Array<String>) {
-    if (args.isEmpty()) {
-        throw IllegalArgumentException("API_KEY is missing")
-    }
-    val apiKey = args.get(0)
-    val url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest" + "?" +
-        listOf(
-            Pair("start", "1"),
-            Pair("limit", "3"),
-            Pair("convert", "EUR")
-        ).map {(k, v) -> "$k=$v"}
-            .joinToString("&")
+    if (args.isEmpty()) throw IllegalArgumentException("API_KEY is missing")
+
+    val apiKey = args[0]
+    val url: String = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest" + "?" +
+            listOf(
+                Pair("start", "1"),
+                Pair("limit", "3"),
+                Pair("convert", "EUR")
+            ).joinToString("&") { (k, v) -> "$k=$v" }
 
     try {
         val json = makeAPICall(url, apiKey)
@@ -51,15 +49,15 @@ fun main(args: Array<String>) {
     }
 }
 
-  fun makeAPICall(url:String, apiKey:String):String {
-      var responseContent = ""
-      val url = URL(url)
+  fun makeAPICall(urlString:String, apiKey:String):String {
+      val responseContent: String
+      val url = URL(urlString)
       val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
 
-      urlConnection.setRequestProperty("Accept", "application/json");
+      urlConnection.setRequestProperty("Accept", "application/json")
       urlConnection.setRequestProperty("X-CMC_PRO_API_KEY", apiKey)
       try {
-          val `in`: InputStream = BufferedInputStream(urlConnection.getInputStream())
+          val `in`: InputStream = BufferedInputStream(urlConnection.inputStream)
           responseContent = `in`.bufferedReader().use(BufferedReader::readText)
       } finally {
           urlConnection.disconnect()
